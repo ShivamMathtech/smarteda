@@ -12,16 +12,16 @@ SmartEDA automates the tedious parts of data exploration — ingestion, profilin
 
 ## Features
 
-| Feature | Description |
-|---------|-------------|
-| **CSV/Excel Ingestion** | Auto-detection of delimiters, encodings, date columns; type optimization |
-| **Schema Detection** | Automatic type inference (numeric, categorical, datetime, boolean, text) |
+| Feature                    | Description                                                                      |
+| -------------------------- | -------------------------------------------------------------------------------- |
+| **CSV/Excel Ingestion**    | Auto-detection of delimiters, encodings, date columns; type optimization         |
+| **Schema Detection**       | Automatic type inference (numeric, categorical, datetime, boolean, text)         |
 | **Missing Value Analysis** | Per-column analysis, severity classification, pattern detection, deletion impact |
-| **Duplicate Detection** | Exact and fuzzy (string similarity) duplicate identification |
-| **Outlier Detection** | IQR, Z-score, Modified Z-score, Isolation Forest, LOF methods |
-| **Correlation Analysis** | Pearson, Spearman, Kendall with heatmaps and multicollinearity warnings |
-| **Data Quality Score** | Weighted scoring across completeness, uniqueness, validity, consistency |
-| **HTML Report Generation** | Beautiful interactive Plotly reports with Jinja2 templates |
+| **Duplicate Detection**    | Exact and fuzzy (string similarity) duplicate identification                     |
+| **Outlier Detection**      | IQR, Z-score, Modified Z-score, Isolation Forest, LOF methods                    |
+| **Correlation Analysis**   | Pearson, Spearman, Kendall with heatmaps and multicollinearity warnings          |
+| **Data Quality Score**     | Weighted scoring across completeness, uniqueness, validity, consistency          |
+| **HTML Report Generation** | Beautiful interactive Plotly reports with Jinja2 templates                       |
 
 ---
 
@@ -36,7 +36,7 @@ pip install smarteda
 ### From Source
 
 ```bash
-git clone https://github.com/smarteda/smarteda.git
+git clone  https://github.com/ShivamMathtech/smarteda.git
 cd smarteda
 pip install -e ".[dev]"
 ```
