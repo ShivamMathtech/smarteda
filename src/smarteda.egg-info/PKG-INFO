@@ -23,6 +23,7 @@ Classifier: Topic :: Software Development :: Libraries :: Python Modules
 Classifier: Typing :: Typed
 Requires-Python: >=3.11
 Description-Content-Type: text/markdown
+License-File: LICENSE
 Requires-Dist: pandas>=2.0.0
 Requires-Dist: numpy>=1.24.0
 Requires-Dist: scikit-learn>=1.3.0
@@ -40,6 +41,7 @@ Requires-Dist: pre-commit>=3.4.0; extra == "dev"
 Provides-Extra: docs
 Requires-Dist: mkdocs>=1.5.0; extra == "docs"
 Requires-Dist: mkdocs-material>=9.0.0; extra == "docs"
+Dynamic: license-file
 
 # SmartEDA v0.1
 
@@ -55,16 +57,16 @@ SmartEDA automates the tedious parts of data exploration — ingestion, profilin
 
 ## Features
 
-| Feature | Description |
-|---------|-------------|
-| **CSV/Excel Ingestion** | Auto-detection of delimiters, encodings, date columns; type optimization |
-| **Schema Detection** | Automatic type inference (numeric, categorical, datetime, boolean, text) |
+| Feature                    | Description                                                                      |
+| -------------------------- | -------------------------------------------------------------------------------- |
+| **CSV/Excel Ingestion**    | Auto-detection of delimiters, encodings, date columns; type optimization         |
+| **Schema Detection**       | Automatic type inference (numeric, categorical, datetime, boolean, text)         |
 | **Missing Value Analysis** | Per-column analysis, severity classification, pattern detection, deletion impact |
-| **Duplicate Detection** | Exact and fuzzy (string similarity) duplicate identification |
-| **Outlier Detection** | IQR, Z-score, Modified Z-score, Isolation Forest, LOF methods |
-| **Correlation Analysis** | Pearson, Spearman, Kendall with heatmaps and multicollinearity warnings |
-| **Data Quality Score** | Weighted scoring across completeness, uniqueness, validity, consistency |
-| **HTML Report Generation** | Beautiful interactive Plotly reports with Jinja2 templates |
+| **Duplicate Detection**    | Exact and fuzzy (string similarity) duplicate identification                     |
+| **Outlier Detection**      | IQR, Z-score, Modified Z-score, Isolation Forest, LOF methods                    |
+| **Correlation Analysis**   | Pearson, Spearman, Kendall with heatmaps and multicollinearity warnings          |
+| **Data Quality Score**     | Weighted scoring across completeness, uniqueness, validity, consistency          |
+| **HTML Report Generation** | Beautiful interactive Plotly reports with Jinja2 templates                       |
 
 ---
 
@@ -79,7 +81,7 @@ pip install smarteda
 ### From Source
 
 ```bash
-git clone https://github.com/smarteda/smarteda.git
+git clone  https://github.com/ShivamMathtech/smarteda.git
 cd smarteda
 pip install -e ".[dev]"
 ```
