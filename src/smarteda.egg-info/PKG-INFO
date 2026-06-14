@@ -1,0 +1,347 @@
+Metadata-Version: 2.4
+Name: smarteda
+Version: 0.1.0
+Summary: Production-grade Exploratory Data Analysis (EDA) toolkit for Python
+Author-email: SmartEDA Team <team@smarteda.dev>
+License: MIT
+Project-URL: Homepage, https://github.com/smarteda/smarteda
+Project-URL: Documentation, https://smarteda.readthedocs.io
+Project-URL: Repository, https://github.com/smarteda/smarteda
+Project-URL: Issues, https://github.com/smarteda/smarteda/issues
+Project-URL: Changelog, https://github.com/smarteda/smarteda/blob/main/CHANGELOG.md
+Keywords: eda,data-analysis,pandas,exploratory-data-analysis,data-quality,data-science
+Classifier: Development Status :: 4 - Beta
+Classifier: Intended Audience :: Developers
+Classifier: Intended Audience :: Science/Research
+Classifier: License :: OSI Approved :: MIT License
+Classifier: Operating System :: OS Independent
+Classifier: Programming Language :: Python :: 3
+Classifier: Programming Language :: Python :: 3.11
+Classifier: Programming Language :: Python :: 3.12
+Classifier: Topic :: Scientific/Engineering :: Information Analysis
+Classifier: Topic :: Software Development :: Libraries :: Python Modules
+Classifier: Typing :: Typed
+Requires-Python: >=3.11
+Description-Content-Type: text/markdown
+Requires-Dist: pandas>=2.0.0
+Requires-Dist: numpy>=1.24.0
+Requires-Dist: scikit-learn>=1.3.0
+Requires-Dist: plotly>=5.15.0
+Requires-Dist: openpyxl>=3.1.0
+Requires-Dist: jinja2>=3.1.0
+Requires-Dist: typing-extensions>=4.7.0
+Provides-Extra: dev
+Requires-Dist: pytest>=7.4.0; extra == "dev"
+Requires-Dist: pytest-cov>=4.1.0; extra == "dev"
+Requires-Dist: black>=23.0.0; extra == "dev"
+Requires-Dist: ruff>=0.1.0; extra == "dev"
+Requires-Dist: mypy>=1.5.0; extra == "dev"
+Requires-Dist: pre-commit>=3.4.0; extra == "dev"
+Provides-Extra: docs
+Requires-Dist: mkdocs>=1.5.0; extra == "docs"
+Requires-Dist: mkdocs-material>=9.0.0; extra == "docs"
+
+# SmartEDA v0.1
+
+[![Python 3.11+](https://img.shields.io/badge/python-3.11+-blue.svg)](https://www.python.org/downloads/)
+[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
+[![Code style: black](https://img.shields.io/badge/code%20style-black-000000.svg)](https://github.com/psf/black)
+
+> Production-grade Exploratory Data Analysis (EDA) toolkit for Python.
+
+SmartEDA automates the tedious parts of data exploration — ingestion, profiling, quality analysis, and report generation — so you can focus on insights.
+
+---
+
+## Features
+
+| Feature | Description |
+|---------|-------------|
+| **CSV/Excel Ingestion** | Auto-detection of delimiters, encodings, date columns; type optimization |
+| **Schema Detection** | Automatic type inference (numeric, categorical, datetime, boolean, text) |
+| **Missing Value Analysis** | Per-column analysis, severity classification, pattern detection, deletion impact |
+| **Duplicate Detection** | Exact and fuzzy (string similarity) duplicate identification |
+| **Outlier Detection** | IQR, Z-score, Modified Z-score, Isolation Forest, LOF methods |
+| **Correlation Analysis** | Pearson, Spearman, Kendall with heatmaps and multicollinearity warnings |
+| **Data Quality Score** | Weighted scoring across completeness, uniqueness, validity, consistency |
+| **HTML Report Generation** | Beautiful interactive Plotly reports with Jinja2 templates |
+
+---
+
+## Installation
+
+### From PyPI (recommended)
+
+```bash
+pip install smarteda
+```
+
+### From Source
+
+```bash
+git clone https://github.com/smarteda/smarteda.git
+cd smarteda
+pip install -e ".[dev]"
+```
+
+---
+
+## Quick Start
+
+### 1. Load Your Data
+
+```python
+from smarteda import DataLoader
+
+loader = DataLoader()
+df = loader.load("data.csv")      # Auto-detects encoding, delimiter
+df = loader.load("data.xlsx")     # Excel with sheet selection
+```
+
+### 2. Run Full EDA
+
+```python
+from smarteda import (
+    DataLoader, SchemaDetector, MissingValueAnalyzer,
+    DuplicateAnalyzer, OutlierAnalyzer, CorrelationAnalyzer,
+    QualityScorer, HTMLReportGenerator, EDAReport
+)
+from datetime import datetime
+
+# Load data
+df = DataLoader().load("your_data.csv")
+
+# Run all analyses
+report = EDAReport(
+    dataset_name="your_data",
+    schema=SchemaDetector().detect(df),
+    missing_values=MissingValueAnalyzer().analyze(df),
+    duplicates=DuplicateAnalyzer().analyze(df),
+    outliers=OutlierAnalyzer().analyze(df),
+    correlations=CorrelationAnalyzer().analyze(df),
+    quality_score=QualityScorer().score(df),
+    generated_at=datetime.now().isoformat(),
+)
+
+# Generate HTML report
+HTMLReportGenerator().save(report, "eda_report.html")
+```
+
+### 3. Individual Analysis Modules
+
+```python
+from smarteda import SchemaDetector, QualityScorer
+
+# Schema detection
+schema = SchemaDetector().detect(df)
+print(schema.columns["age"].inferred_type)  # DataType.INTEGER
+
+# Quality scoring
+score = QualityScorer().score(df)
+print(f"Quality: {score.overall_score}/100 (Grade {score.grade})")
+```
+
+---
+
+## Architecture
+
+```
+smarteda/
+├── src/smarteda/
+│   ├── __init__.py              # Public API exports
+│   ├── core/                    # Data ingestion & profiling
+│   │   ├── data_loader.py       # CSV/Excel loader with auto-detection
+│   │   ├── schema_detector.py   # Automatic type inference
+│   │   └── data_profiler.py     # Statistical profiling
+│   ├── analysis/                # Analysis engines
+│   │   ├── missing_values.py    # Missing value analysis
+│   │   ├── duplicates.py        # Duplicate detection (exact + fuzzy)
+│   │   ├── outliers.py          # Multi-method outlier detection
+│   │   ├── correlations.py      # Correlation analysis
+│   │   └── quality_score.py     # Weighted quality scoring
+│   ├── reports/                 # Report generation
+│   │   └── html_generator.py    # Interactive HTML with Plotly
+│   ├── models/                  # Data models (dataclasses)
+│   │   └── analysis_result.py   # Structured result types
+│   └── utils/                   # Utilities
+│       └── helpers.py           # Common helper functions
+├── tests/                       # Comprehensive test suite
+├── pyproject.toml               # Project configuration
+└── README.md                    # This file
+```
+
+---
+
+## Module Reference
+
+### DataLoader
+
+```python
+loader = DataLoader(
+    optimize_types=True,     # Downcast numeric types
+    parse_dates=True,        # Auto-parse date columns
+)
+
+df = loader.load("data.csv")
+df = loader.load("data.xlsx", sheet_name="Sheet1")
+df = loader.load_from_buffer(buffer, file_extension=".csv")
+
+# Batch loading
+df = loader.load_multiple(["file1.csv", "file2.csv"], concat=True)
+```
+
+### SchemaDetector
+
+```python
+detector = SchemaDetector(sample_size=1000)
+profile = detector.detect(df)
+
+# Access column info
+for name, col in profile.columns.items():
+    print(f"{name}: {col.inferred_type.value} ({col.cardinality})")
+
+# Type distribution
+print(detector.get_type_distribution(profile))
+```
+
+### MissingValueAnalyzer
+
+```python
+analyzer = MissingValueAnalyzer(missing_indicators=["?", "N/A"])
+report = analyzer.analyze(df)
+
+print(f"Missing: {report.overall_missing_ratio:.2%}")
+for rec in report.recommendations:
+    print(rec)
+
+# Deletion impact
+impact = analyzer.get_deletion_impact(df, strategy="row")
+```
+
+### DuplicateAnalyzer
+
+```python
+analyzer = DuplicateAnalyzer(fuzzy_threshold=0.85)
+report = analyzer.analyze(df, check_fuzzy=True)
+
+print(f"Exact duplicates: {report.exact_duplicates}")
+print(f"Fuzzy duplicates: {report.fuzzy_duplicates}")
+```
+
+### OutlierAnalyzer
+
+```python
+from smarteda.analysis.outliers import OutlierMethod
+
+analyzer = OutlierAnalyzer(
+    method=OutlierMethod.IQR,      # or ZSCORE, MODIFIED_ZSCORE, ISOLATION_FOREST, LOF
+    iqr_multiplier=1.5,
+    zscore_threshold=3.0,
+)
+report = analyzer.analyze(df, include_multivariate=True)
+
+# Get outlier rows
+outliers = analyzer.get_outlier_rows(df, "salary")
+```
+
+### CorrelationAnalyzer
+
+```python
+analyzer = CorrelationAnalyzer(method="pearson")
+report = analyzer.analyze(df, target="sales")
+
+print(f"Strong positive pairs: {len(report.strong_positive_pairs)}")
+for pair in report.strong_positive_pairs[:5]:
+    print(f"  {pair['column_1']} vs {pair['column_2']}: {pair['correlation']:.3f}")
+```
+
+### QualityScorer
+
+```python
+scorer = QualityScorer(
+    weights={"completeness": 0.3, "uniqueness": 0.2, "validity": 0.25, "consistency": 0.25},
+)
+score = scorer.score(df)
+
+print(f"Score: {score.overall_score}/100 (Grade {score.grade})")
+print(f"Breakdown: {score.score_breakdown}")
+for area in score.improvement_areas:
+    print(f"  - {area}")
+```
+
+### HTMLReportGenerator
+
+```python
+generator = HTMLReportGenerator()  # or custom template
+generator.save(report, "report.html")
+```
+
+---
+
+## Development
+
+### Setup
+
+```bash
+pip install -e ".[dev]"
+pre-commit install
+```
+
+### Testing
+
+```bash
+# Run all tests
+pytest
+
+# With coverage
+pytest --cov=smarteda --cov-report=html
+
+# Specific test file
+pytest tests/test_data_loader.py -v
+```
+
+### Code Quality
+
+```bash
+# Formatting
+black src/ tests/
+
+# Linting
+ruff check src/ tests/
+
+# Type checking
+mypy src/smarteda
+```
+
+---
+
+## Requirements
+
+- Python >= 3.11
+- pandas >= 2.0.0
+- numpy >= 1.24.0
+- scikit-learn >= 1.3.0
+- plotly >= 5.15.0
+- openpyxl >= 3.1.0 (Excel support)
+- jinja2 >= 3.1.0 (HTML templates)
+
+---
+
+## License
+
+MIT License. See [LICENSE](LICENSE) for details.
+
+---
+
+## Roadmap
+
+- [ ] Automatic feature engineering suggestions
+- [ ] Time series analysis module
+- [ ] PDF report export
+- [ ] Dask support for large datasets
+- [ ] SQL database connector
+- [ ] Web dashboard (Streamlit/Gradio)
+
+---
+
+Made with care for data scientists who value clean, well-structured code.
